@@ -1,53 +1,41 @@
+// import { useState } from 'react';
+import { useToggle } from 'react-use';
 import { PropTypes } from 'prop-types';
-import { ImageGalleryCards, ImageGalleryImage } from 'components/ImageGalleryItem/ImageGalleryItem.styled';
+import {
+  ImageGalleryCards,
+  ImageGalleryImage,
+} from 'components/ImageGalleryItem/ImageGalleryItem.styled';
 import { Modal } from 'components/Modal/Modal';
-import { Component } from 'react';
 
+export const ImageGalleryItem = ({ id, webformatURL, largeImageURL, tags }) => {
+  //   const [isModalVisible, setIsModalVisible] = useState(false);
 
-export class ImageGalleryItem extends Component {
-    state = {
-        isModalVisible: false,
+  //   const handleCloseModal = () => {
+  //     setIsModalVisible(false);
+  //   };
 
-    }
-    
-    handleCloseModal = () => {
-    this.setState({ isModalVisible: false });
-}
-    
-  handleOpenModal = () => {
-      this.setState({ isModalVisible: true });
-  
-  }
-    render() {
-         return (
+  //   const handleOpenModal = () => {
+  //     setIsModalVisible(true);
+  //   };
 
-        <ImageGalleryCards>
-                 {this.state.isModalVisible && (
-                     <Modal
-                         largeImageURL={this.props.largeImageURL}
-                         tags={this.props.tags}
-                         handleClose={ this.handleCloseModal }
-                     />
-            ) }
-            <ImageGalleryImage
-                src={ this.props.webformatURL }
-                alt={ this.props.tags }
-                onClick={ this.handleOpenModal }
-            />
-        </ImageGalleryCards>
+  const [on, toggle] = useToggle(false);
 
-    )
-
-
- }
-}
-
-
-
+  return (
+    <ImageGalleryCards>
+      {on && (
+        <Modal
+          largeImageURL={largeImageURL}
+          tags={tags}
+          handleClose={{ toggle }}
+        />
+      )}
+      <ImageGalleryImage src={webformatURL} alt={tags} onClick={{ toggle }} />
+    </ImageGalleryCards>
+  );
+};
 
 ImageGalleryItem.propTypes = {
   largeImageURL: PropTypes.string.isRequired,
   webformatURL: PropTypes.string.isRequired,
-  tags: PropTypes.string.isRequired
+  tags: PropTypes.string.isRequired,
 };
-
