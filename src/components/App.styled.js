@@ -7,7 +7,7 @@ export const Container = styled.main`
   padding-bottom: 24px;
 `;
 export const ErrorMessage = styled.p`
-  color: #b97575 ;
+  color: red;
   font-size: 20px;
   font-weight: 700;
   text-align: center;

@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { SearchbarForm } from 'components/Searchbar/Searchbar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Loader } from 'components/Loader/Loader';
@@ -6,67 +6,46 @@ import { Button } from 'components/Button/Button';
 import * as API from 'services/Api';
 import { Container, ErrorMessage } from 'components/App.styled';
 
+export const App = () => {
+  const [pictures, setPictures] = useState([]);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState('');
 
-export class App extends Component {
-  state = {
-    pictures: [],
-    page: 1,
-    total: 0,
-    isLoading: false,
-    error: null,
-    query: '',
-  }
+  console.log('total 1', total);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.page !== this.state.page && prevState.query === this.state.query) {
-      this.setState({
-        isLoading: true
-      });
-      API.fetchImage(this.state.query, this.state.page).then((response) => {
-        const updatedPictures = [...this.state.pictures, ...response.hits];
-        this.setState({
-          pictures: updatedPictures,
-          isLoading: false
-        });
+  useEffect(() => {
+    if (query) {
+      API.fetchImage(query, page).then(response => {
+        setPictures(prevState => [...prevState, ...response.hits]);
+        setIsLoading(false);
+        setTotal(response.total);
       });
     }
-  }
-  
-  handleLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+    // if (total !== 0) {
+    //   Notiflix.Notify.success(`Found ${total} pictures`);
+    // }
+  }, [page, query]);
+
+  const handleLoadMore = () => {
+    setPage(page + 1);
+    setIsLoading(true); //?  видалити та перевірити
   };
-  
-  handleSubmit = (searchQuery) => {
-    this.setState({
-      isLoading: true
-    });
 
-    API.fetchImage(searchQuery, 1).then((response) => {
-      this.setState({
-        pictures: response.hits,
-        query: searchQuery,
-        page: 1,
-        isLoading: false,
-        total: response.total
-      });
-    });
-  }
+  const handleSubmit = searchQuery => {
+    setQuery(searchQuery);
+    setPage(1);
+    setPictures([]);
+  };
 
-  render() {
-    return (
-      <Container>
-        <SearchbarForm onSubmit={ this.handleSubmit } />
-        <ImageGallery items={this.state.pictures} />
-        { this.state.isLoading && <Loader /> }
-        { this.state.pictures.length < this.state.total && (
-          <Button onLoadMore={ this.handleLoadMore } />
-        )}
-        { this.state.pictures.length === 0 && (<ErrorMessage>Nothing found =(</ErrorMessage>)}
-      </Container>
-    );
-}
-
+  return (
+    <Container>
+      <SearchbarForm onSubmit={handleSubmit} />
+      <ImageGallery items={pictures} />
+      {isLoading && <Loader />}
+      {pictures.length < total && <Button onLoadMore={handleLoadMore} />}
+      {pictures.length === 0 && <ErrorMessage>We found nothing</ErrorMessage>}
+    </Container>
+  );
 };
-
