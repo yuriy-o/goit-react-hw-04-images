@@ -3,35 +3,34 @@ import { ModalWindow, Overlay } from 'components/Modal/Modal.styled';
 import { Component } from 'react';
 
 export class Modal extends Component {
-    componentDidMount() {
-        window.addEventListener('keydown', this.handleKeyDown);
-    }
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyDown);
+  }
 
-    componentWillUnmount() {
-        window.removeEventListener('keydown', this.handleKeyDown);
-    }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+  }
 
-    handleKeyDown = e => {
-        if (e.code === 'Escape') {
-            this.props.handleClose();
-        }
+  handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      this.props.handleClose();
     }
-    
-    onBackdropClick = () => {
-        this.props.handleClose();
-    }
+  };
 
-    render() {
-        return (
-            <Overlay onClick={ this.onBackdropClick }>
-                <ModalWindow>
-                    <img src={ this.props.largeImageURL } alt={ this.props.tags } />
-                </ModalWindow>
-            </Overlay>
-        );
-    }
-};
+  onBackdropClick = () => {
+    this.props.handleClose();
+  };
 
+  render() {
+    return (
+      <Overlay onClick={this.onBackdropClick}>
+        <ModalWindow>
+          <img src={this.props.largeImageURL} alt={this.props.tags} />
+        </ModalWindow>
+      </Overlay>
+    );
+  }
+}
 
 Modal.propTypes = {
   tags: PropTypes.string.isRequired,
