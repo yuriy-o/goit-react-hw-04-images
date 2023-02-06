@@ -1,36 +1,38 @@
 import PropTypes from 'prop-types';
 import { ModalWindow, Overlay } from 'components/Modal/Modal.styled';
-import { Component } from 'react';
+import { useEffect } from 'react';
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
+export const Modal = ({ largeImageURL, tags, handleClose }) => {
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
-  handleKeyDown = e => {
+  const handleKeyDown = e => {
     if (e.code === 'Escape') {
-      this.props.handleClose();
+      handleClose();
     }
   };
 
-  onBackdropClick = () => {
-    this.props.handleClose();
+  const onBackdropClick = e => {
+    if (e.currentTarget === e.target) {
+      handleClose();
+    }
+
+    // handleClose();  //! Без `умови ↑↑ модалка також буде закриватись при кліку на картинку
   };
 
-  render() {
-    return (
-      <Overlay onClick={this.onBackdropClick}>
-        <ModalWindow>
-          <img src={this.props.largeImageURL} alt={this.props.tags} />
-        </ModalWindow>
-      </Overlay>
-    );
-  }
-}
+  return (
+    <Overlay onClick={onBackdropClick}>
+      <ModalWindow>
+        <img src={largeImageURL} alt={tags} />
+      </ModalWindow>
+    </Overlay>
+  );
+};
 
 Modal.propTypes = {
   tags: PropTypes.string.isRequired,

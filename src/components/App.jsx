@@ -13,8 +13,6 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState('');
 
-  console.log('total 1', total);
-
   useEffect(() => {
     if (query) {
       API.fetchImage(query, page).then(response => {
@@ -23,9 +21,6 @@ export const App = () => {
         setTotal(response.total);
       });
     }
-    // if (total !== 0) {
-    //   Notiflix.Notify.success(`Found ${total} pictures`);
-    // }
   }, [page, query]);
 
   const handleLoadMore = () => {
