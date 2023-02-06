@@ -1,11 +1,13 @@
 // import { useState } from 'react';
 import { useToggle } from 'react-use';
 import { PropTypes } from 'prop-types';
+
+import { Modal } from 'components/Modal/Modal';
+
 import {
   ImageGalleryCards,
   ImageGalleryImage,
 } from 'components/ImageGalleryItem/ImageGalleryItem.styled';
-import { Modal } from 'components/Modal/Modal';
 
 export const ImageGalleryItem = ({ id, webformatURL, largeImageURL, tags }) => {
   //   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -22,14 +24,10 @@ export const ImageGalleryItem = ({ id, webformatURL, largeImageURL, tags }) => {
 
   return (
     <ImageGalleryCards>
-      {on && (
-        <Modal
-          largeImageURL={largeImageURL}
-          tags={tags}
-          handleClose={{ toggle }}
-        />
+      {!on && (
+        <Modal largeImageURL={largeImageURL} tags={tags} handleClose={toggle} />
       )}
-      <ImageGalleryImage src={webformatURL} alt={tags} onClick={{ toggle }} />
+      <ImageGalleryImage src={webformatURL} alt={tags} onClick={toggle} />
     </ImageGalleryCards>
   );
 };
