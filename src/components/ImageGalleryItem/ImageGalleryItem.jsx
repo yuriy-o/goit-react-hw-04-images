@@ -18,7 +18,7 @@ export const ImageGalleryItem = ({ id, webformatURL, largeImageURL, tags }) => {
   //     setIsModalVisible(true);
   //   };
 
-  const [on, toggle] = useToggle(false);
+  const [on, toggle] = useToggle(true);
 
   return (
     <ImageGalleryCards>
